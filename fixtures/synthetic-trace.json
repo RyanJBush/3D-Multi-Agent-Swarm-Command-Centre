@@ -1,0 +1,89 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "synthetic-001",
+  "synthetic": true,
+  "events": [
+    {
+      "eventId": "e01",
+      "sequence": 1,
+      "timestamp": "2026-11-07T12:00:00.000Z",
+      "agentRole": "planner",
+      "eventType": "task_started",
+      "parentEventId": null,
+      "relatedEventId": null,
+      "outcome": "started",
+      "details": {
+        "message": "Prepare a patch using requirements.txt."
+      }
+    },
+    {
+      "eventId": "e02",
+      "sequence": 2,
+      "timestamp": "2026-11-07T12:00:01.000Z",
+      "agentRole": "planner",
+      "eventType": "handoff",
+      "parentEventId": "e01",
+      "relatedEventId": null,
+      "outcome": "success",
+      "details": {
+        "toAgentRole": "implementer",
+        "message": "Read requirements.txt and prepare the patch."
+      }
+    },
+    {
+      "eventId": "e03",
+      "sequence": 3,
+      "timestamp": "2026-11-07T12:00:02.000Z",
+      "agentRole": "implementer",
+      "eventType": "tool_call",
+      "parentEventId": "e02",
+      "relatedEventId": null,
+      "outcome": "started",
+      "details": {
+        "toolName": "read_file",
+        "path": "requirements.txt"
+      }
+    },
+    {
+      "eventId": "e04",
+      "sequence": 4,
+      "timestamp": "2026-11-07T12:00:03.000Z",
+      "agentRole": "implementer",
+      "eventType": "tool_result",
+      "parentEventId": "e03",
+      "relatedEventId": "e03",
+      "outcome": "failure",
+      "details": {
+        "errorCode": "ENOENT",
+        "message": "Synthetic failure: requirements.txt does not exist in the fixture workspace."
+      }
+    },
+    {
+      "eventId": "e05",
+      "sequence": 5,
+      "timestamp": "2026-11-07T12:00:04.000Z",
+      "agentRole": "implementer",
+      "eventType": "handoff",
+      "parentEventId": "e04",
+      "relatedEventId": "e03",
+      "outcome": "success",
+      "details": {
+        "toAgentRole": "reviewer",
+        "message": "Diagnose the failed file read; no patch was produced."
+      }
+    },
+    {
+      "eventId": "e06",
+      "sequence": 6,
+      "timestamp": "2026-11-07T12:00:05.000Z",
+      "agentRole": "reviewer",
+      "eventType": "review_completed",
+      "parentEventId": "e05",
+      "relatedEventId": "e04",
+      "outcome": "blocked",
+      "details": {
+        "message": "Cannot review a patch: the required file read failed."
+      }
+    }
+  ]
+}
