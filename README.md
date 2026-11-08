@@ -28,7 +28,7 @@ npm run build           # production bundle in dist/
 npm run preview         # serve dist/ at http://localhost:4173
 ```
 
-GitHub CI (`.github/workflows/ci.yml`) runs `npm ci`, typecheck, test, and build. It has **not** been executed on GitHub; only the same commands have been run locally.
+GitHub CI (`.github/workflows/ci.yml`) runs `npm ci`, typecheck, test, and build. [The first GitHub run passed](https://github.com/RyanJBush/trace-inspector/actions/runs/42444697400) on 2026-11-08 for commit `ff4cbde`: clean `npm ci`, typecheck, 265 tests across 8 files, and production build, using Node 22.23.4 and npm 10.9.9 on Ubuntu.
 
 Optional real-browser keyboard walkthrough (needs Playwright + Chromium installed separately; not a project dependency, not run by CI):
 
@@ -116,7 +116,7 @@ No participants have been recruited and no study has been run. This is a protoco
 - 3D checks ran in Chromium with a software WebGL renderer (SwiftShader). No GPU rendering and no performance measurements were taken; no performance claims are made. The 3D chunk is about 550 kB (137 kB gzip), loaded only on first use.
 - The 3D view has a fixed camera and no orbit controls; labels are canvas textures. Cleanup covers the geometries, materials, and map (label) textures the view owns, through `disposeObject3D` in `src/view3d.ts`, tested by `tests/view3d-cleanup.test.ts`. Edge and failure-marker objects, with their label textures, are disposed on every rebuild. The three node meshes and their label textures stay allocated until the view closes. Three.js's shared sprite geometry is not owned by the view and is not disposed. This was verified with a mocked renderer; GPU memory was not measured.
 - No axe/automated accessibility audit and no screen-reader testing of any kind.
-- GitHub CI (`.github/workflows/ci.yml`) has never been executed on GitHub; the commands were run locally only.
+- GitHub CI verifies installation, types, unit/DOM tests, and the build. It does not run the optional real-browser scripts or a human diagnostic study.
 - No GPU-memory measurement and no rendering-performance measurement.
 - The contract does not say whether a tool_call may receive more than one result; the validator does not forbid it, and replay closes a call on the first result applied.
 - Browser checks ran in Chromium 153 only (Playwright) with software WebGL. Firefox/Safari untested.
