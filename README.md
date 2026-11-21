@@ -1,4 +1,10 @@
-# Trace Inspector
+# 3D Multi-Agent Trace Visualizer & Inspector
+
+The implemented visualization and inspection component of the original **3D Multi-Agent Swarm Command Centre** concept. It is a trace viewer, not an agent runtime: it does not run, orchestrate, or edit agents.
+
+An interactive multi-agent execution trace visualizer featuring deterministic replay, a 2D timeline, a 3D agent graph, and detailed failure inspection.
+
+Repository: [RyanJBush/3D-Multi-Agent-Swarm-Command-Centre](https://github.com/RyanJBush/3D-Multi-Agent-Swarm-Command-Centre) (formerly `RyanJBush/trace-inspector`). The in-app title ("Trace Inspector") and the npm package name (`trace-inspector`) are unchanged internal identifiers.
 
 Local-only tool that validates a trace, replays it deterministically, and shows it in an accessible 2D table or a 3D agent graph, both driving one shared event inspector. Nothing is uploaded: files are read in the browser with `FileReader`, and the built page's CSP sets `connect-src 'none'`.
 
@@ -28,7 +34,7 @@ npm run build           # production bundle in dist/
 npm run preview         # serve dist/ at http://localhost:4173
 ```
 
-GitHub CI (`.github/workflows/ci.yml`) runs `npm ci`, typecheck, test, and build. [The first GitHub run passed](https://github.com/RyanJBush/trace-inspector/actions/runs/42444697400) on 2026-11-08 for commit `ff4cbde`: clean `npm ci`, typecheck, 265 tests across 8 files, and production build, using Node 22.23.4 and npm 10.9.9 on Ubuntu.
+GitHub CI (`.github/workflows/ci.yml`) runs `npm ci`, typecheck, test, and build. [The first GitHub run passed](https://github.com/RyanJBush/3D-Multi-Agent-Swarm-Command-Centre/actions/runs/42444697400) on 2026-11-08 for commit `ff4cbde`: clean `npm ci`, typecheck, 265 tests across 8 files, and production build, using Node 22.23.4 and npm 10.9.9 on Ubuntu.
 
 Optional real-browser keyboard walkthrough (needs Playwright + Chromium installed separately; not a project dependency, not run by CI):
 
@@ -39,6 +45,8 @@ node scripts/browser-3d-walkthrough.cjs http://localhost:5173/   # also needs Py
 node scripts/ui-layout-check.cjs http://localhost:5173/ [screenshot-dir]
 ```
 These are scripted checks. They are not human evaluation and are not evidence that 3D is better than 2D.
+
+Post-rename check on 2026-11-21 (Windows, Node 24.22.1, inside the `engines` range; Node 22.23.4 was not available locally): clean `npm ci`, typecheck passed, 265 tests passed across 8 files, production build passed. Against `npm run preview`, Playwright Chromium 153 with software WebGL passed all scripted checks: 2D walkthrough 32/32, 3D walkthrough 40/40 (including no-WebGL fallback and context loss), layout check 24/24 (1280 px and 375 px). The rename update was documentation-only; source, tests, and the fixture are unchanged.
 
 ## Files
 
@@ -112,7 +120,7 @@ No participants have been recruited and no study has been run. This is a protoco
 ## Known limitations
 
 - The 2D/3D screen redesign (header, toolbar, status row, two-column layout, inspector, failure summary) is a visual and structural change. No usability improvement has been measured, and nothing here shows faster or more accurate diagnosis.
-- No SwarmOS integration, no SwarmOS trace inspected. No live execution or workflow editor.
+- No SwarmOS integration, no SwarmOS trace inspected, and no verified ingestion of real SwarmOS traces. No live execution or multi-agent orchestration, no workflow editor, and no autonomous coding.
 - 3D checks ran in Chromium with a software WebGL renderer (SwiftShader). No GPU rendering and no performance measurements were taken; no performance claims are made. The 3D chunk is about 550 kB (137 kB gzip), loaded only on first use.
 - The 3D view has a fixed camera and no orbit controls; labels are canvas textures. Cleanup covers the geometries, materials, and map (label) textures the view owns, through `disposeObject3D` in `src/view3d.ts`, tested by `tests/view3d-cleanup.test.ts`. Edge and failure-marker objects, with their label textures, are disposed on every rebuild. The three node meshes and their label textures stay allocated until the view closes. Three.js's shared sprite geometry is not owned by the view and is not disposed. This was verified with a mocked renderer; GPU memory was not measured.
 - No axe/automated accessibility audit and no screen-reader testing of any kind.
